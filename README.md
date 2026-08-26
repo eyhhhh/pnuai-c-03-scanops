@@ -1,237 +1,239 @@
-# Template for Hackathon
-이 레파지토리는 참여자들이 해커톤 결과물을 위한 레파지토리 생성시에 참고할 내용들을 담고 있습니다.
-1. 레파지토리 생성
-2. 레파지토리 구성
-3. README.md 가이드라인
-4. README.md 작성팁
-<br/>
+# ScanOps — 보안 특화 AI 취약점 진단 SaaS
+
+> 부산대학교 2026 AI 해커톤 · 창업트랙(C) 3조 · 팀 **ScanOps**
+
+[![GitHub App](https://img.shields.io/badge/GitHub%20App-설치하기-238636?logo=github)](https://github.com/apps/scanops-security-scanner)
+
+웹 URL 또는 GitHub 코드를 입력하면, **자체 파인튜닝한 1.5B 경량 AI 모델**이 보안 취약점을 자동으로 찾아 CVE·CWE·CVSS 근거와 한국어 수정 가이드를 제공하는 **개발자 친화 보안 진단 SaaS**입니다. 자체 벤치마크 40케이스 기준 **탐지율 100%** 를 달성했습니다.
+
+> **소스코드는 메모리에서만 처리 후 즉시 폐기하고, 결과만 보관(사용자 삭제 전까지·최대 1개월)합니다.** — 코드 프라이버시가 우리의 핵심 약속입니다.
+
+---
+
+## 1. 프로젝트 소개
+
+### 1.1. 개발배경 및 필요성
+- 보안 점검은 보통 개발이 끝난 뒤 별도 단계에서 이루어져 발견이 늦고 수정 비용이 큽니다.
+- 기존 상용 SAST 도구(예: 스패로우)는 가격이 높고 정적 분석(SAST)에 치우쳐 있으며, 결과가 영어·전문 용어 위주라 비(非)보안 개발자가 곧바로 조치하기 어렵습니다.
+- 범용 AI 코딩 에이전트(Claude Code, Codex 등)는 보안에 특화되어 있지 않아 취약점 탐지의 일관성이 떨어집니다.
+- "코드를 작성하는 흐름 안에서" 취약점을 짚어주고 **무엇이·왜 문제이며·어떻게 고치는지**까지, 그리고 **고객 코드를 외부에 남기지 않으면서** 알려주는 도구가 필요했습니다.
+
+### 1.2. 개발 목표 및 주요 내용
+- 상용 API에 종속되지 않는 **보안 특화 자체 파인튜닝 모델(QLoRA + RAG)** 로 취약점을 진단한다.
+- **DAST(웹 URL) / SAST(레포 전체) / GitHub Actions(PR diff)** 세 가지 스캔 방식을 한 플랫폼에서 제공한다.
+- 익명 구조에서 **사용자 계정 · 구독 · 사용량 게이트** 기반 SaaS로 전환한다 (모든 스캔이 `user_id`에 귀속).
+- **코드 즉시 삭제 정책 + 삭제 증빙 로그**로 프라이버시를 데이터로 증명한다.
+
+### 1.3. 세부내용
+**세 가지 스캔 방식**
+
+| 방식 | 입력 | 검사 범위 | 사용량 미터 |
+|------|------|-----------|-------------|
+| DAST | 웹 URL / 도메인 | 실행 중인 앱 외부 동적 분석 (OWASP ZAP) | 스캔 횟수 |
+| SAST | Git 레포 URL | 레포 전체 코드 정적 분석 | 전체 LOC 누적 |
+| GitHub Actions | PR 이벤트 | PR diff 파일 전체 (변경 라인엔 위치 댓글, 그 외엔 위치 없이 보고) | 분석 파일 LOC 누적 |
 
 
-## 1. 레파지토리 생성
-- https://classroom.github.com/a/VDJSvmVC
-- 위 Github Classroom 링크에 접속해 본인 조의 github 레파지토리를 생성하세요.
-<img width="1125" height="790" alt="image" src="https://github.com/user-attachments/assets/7377b191-d36a-43bd-ba16-9742be532ecf" />
+**구독 플랜**
+
+| 플랜 | 가격 | DAST(웹 URL) |  SAST(레포 LOC) & GitHub Actions(LOC) |
+|------|------|------|------|
+| Free | 0원 | 1회 | ✗ |
+| Pro | 19,900원/월 | 월 5회 | 월 10만 줄 |
+| Max | 69,000원/월 | 월 30회 | 월 40만 줄 |
+| Team | 59,000원/월 | 월 20회 | 월 33만 줄 | 
 
 
-- 레파지토리 생성 시 팀 이름은 `{트랙}-{팀번호}-{팀명}` 형식으로 생성하세요.
-- 트랙 란에는 융합트랙은 'A', 지정과제 트랙은 'B', 창업트랙은 'C'를 기입합니다.
-- 예를 들어, 융합트랙 3조의 팀명은 `A-03-ExampleTeamName` 입니다.
-- 이 경우 `PNUAI-A-03-ExampleTeamName`이라는 이름으로 레포지토리가 생성됩니다.
-<br/>
+- **AI 분석 엔진:** NVD CVE 기반 RAG + QLoRA 파인튜닝 LLM이 코드를 입력받아 취약점·CVE·CWE·CVSS·수정 코드를 출력합니다.
+- **Adaptive 2-Stage:** ① 파인튜닝 모델 단독 분석 → ② 검증 실패 시 base 모델 + RAG(CVE 컨텍스트) 폴백.
+- **AI 분석 라우팅:** `AiAnalyzer` 인터페이스 + `AiRouter` 로 자체 모델(CUSTOM)을 축으로 GPT/Claude/Gemini 폴백 체인을 구성해 가용성·비용을 함께 잡았습니다.
 
+### 1.4. 기존 서비스 대비 차별성
+- **코드 프라이버시:** 소스코드는 메모리에서만 처리 후 즉시 폐기, 결과만 보관. 삭제 증빙 로그로 "즉시 폐기" 약속을 데이터로 증명합니다. (무료/Pro URL 스캔은 코드 미전송, GitHub Actions는 고객 인프라 내 스캔 후 결과만 전송하는 **구조적 분리**)
+- **SAST + DAST 동시 제공:** 정적 분석에 치우친 기존 상용 도구와 달리 정적·동적 분석을 모두 제공합니다.
+- **자체 무료 모델:** 상용 API에 종속되지 않는 파인튜닝 모델(986MB, 자체 서버 무제한 구동)을 보유해 비용·프라이버시 측면에서 자생력이 있습니다.
+- **검증된 정확도:** 자체 어댑티브 시스템(QLoRA v4 + RAG)이 **탐지율 100%(40/40), 평균 5.3s** 로 유료 Grok-3 API와 동등 성능을 무료로 달성했습니다.
+- **차별화 증명:** 범용 에이전트(Claude Code/Codex)·경쟁사(스패로우, SAST 계열) 대비 같은 입력으로 결과를 나란히 비교하는 벤치마크 데모를 제공합니다.
 
+### 1.5. 사회적가치 도입 계획
+- 보안 전문 인력이 부족한 **중소기업·스타트업·1인 개발자**가 저비용으로 PR/배포 단계에서 보안 점검을 받게 합니다.
+- 한국어 가이드 제공으로 국내 개발자의 **보안 학습·내재화**를 돕습니다.
+- 코드 미보관 원칙으로 진단 과정 자체의 **정보 유출 리스크를 제거**합니다.
+- 안전한 코드 문화를 확산해 개인정보 유출·서비스 침해 등 사회적 피해를 예방합니다.
 
-## 2. 레파지토리 구성
-- 레파지토리 내에 `README.md` 파일 생성하고 아래의 가이드라인과 작성팁을 참고하여 파일을 작성하세요.
-- 레파지토리 내에 `docs` 폴더를 생성하고 폴더 내에는 과제 수행 하면서 작성한 각종 보고서, 발표자료를 올려둡니다.
-- 그 밖에 레파지토리의 폴더 구성은 과제 결과물에 따라 자유롭게 구성하되 가급적 코드의 목적이나 기능에 따라 폴더를 나누어 구성하세요.  
-<br/>
+---
 
+## 2. 상세설계
 
-## 3. README.md 가이드라인
-- README 파일 작성시에 아래의 5가지 항목의 내용은 필수적으로 포함해야 합니다.
-- 아래의 7가지 항목이외에 프로젝트의 이해를 돕기위한 내용을 추가해도 됩니다.
-- `SAMPLE_README.md`가 단순한 형태의 예제이니 참고하세요.
-```markdown
-### 1. 프로젝트 소개
-#### 1.1. 개발배경 및 필요성
-> 프로젝트를 실행하게 된 배경 및 필요성을 작성하세요.
-
-#### 1.2. 개발 목표 및 주요 내용
-> 프로젝트의 목표 및 주요 내용을 작성하세요.
-
-#### 1.3. 세부내용
-> 위 내용을 작성하세요.
-
-#### 1.4. 기존 서비스 대비 차별성
-> 위 내용을 작성하세요.
-
-#### 1.5. 사회적가치 도입 계획
-> 위 내용을 작성하세요.
-
-
-### 2. 상세설계
-#### 2.1. 시스템 구성도
-> 시스템 구성도(infra, front, back등의 node 간의 관계)의 사진을 삽입하세요.
-
-#### 2.1. 사용 기술
-> 스택 별(backend, frontend, designer등) 사용한 기술 및 버전을 작성하세요.
-> 
-> ex) React.Js - React14, Node.js - v20.0.2
-> (필수)활용한 생성형 AI, AI 코딩 도구에 대해서도 기술하세요.
-
-### 3. 개발결과
-#### 3.1. 전체시스템 흐름도
-> 위 내용을 작성하세요.
-
-#### 3.2. 기능설명
-> 각 페이지 마다 사용자의 입력의 종류와 입력에 따른 결과 설명 및 시연 영상.
-> 
-> ex. 로그인 페이지:
-> 
-> - 이메일 주소와 비밀번호를 입력하면 입력창에서 유효성 검사가 진행됩니다.
-> 
-> - 요효성 검사를 통과하지 못한 경우, 각 경고 문구가 입력창 하단에 표시됩니다.
->   
-> - 유효성 검사를 통과한 경우, 로그인 버튼이 활성화 됩니다.
->   
-> - 로그인 버튼을 클릭 시, 입력한 이메일 주소와 비밀번호에 대한 계정이 있는지 확인합니다.
->   
-> - 계정이 없는 경우, 경고문구가 나타납니다.
->
-> (영상)
-
-#### 3.3. 기능명세서
-> 개발한 제품에 대한 기능명세서를 작성해 제출하세요.
-> 
-> 노션 링크, 한글 문서, pdf 파일, 구글 스프레드 시트 등...
-
-#### 3.4. 디렉토리 구조
-> 위 레포지토리의 디렉토리 구조를 설명하세요.
-
-#### 3.5 AI 도구 활용
-> AI 도구를 어떤 단계에서 어떻게 활용했는지, 어떤 성과가 도출되었는지 기술해주세요.
-
-### 4. 설치 및 사용 방법
-> 제품을 설치하기 위헤 필요한 소프트웨어 및 설치 방법을 작성하세요.
->
-> 제품을 설치하고 난 후, 실행 할 수 있는 방법을 작성하세요.
-
-### 5. 소개 및 시연 영상
-> 프로젝트에 대한 소개와 시연 영상을 넣으세요.
-> 프로젝트 소개 동영상을 교육원 메일(swedu@pusan.ac.kr)로 제출 이후 센터에서 부여받은 youtube URL주소를 넣으세요.
-
-### 6. 팀 소개
-> 팀원 소개 & 구성원 별 역할 분담 & 간단한 연락처를 작성하세요.
-
-### 7. 해커톤 참여 후기
-> 팀원 별 해커톤 참여 후기를 작성하세요.
+### 2.1. 시스템 구성도
 ```
-<br/>
-
-
-## 4. README.md 작성 팁
-- 마크다운 언어를 이용해 README.md 파일을 작성할 때 참고할 수 있는 마크다운 언어 문법을 공유합니다.
-- 다양한 예제와 보다 자세한 문법은 [이 문서](https://www.markdownguide.org/basic-syntax/)를 참고하세요.
-
-### 4.1. 헤더 Header
-```
-# This is a Header 1
-## This is a Header 2
-### This is a Header 3
-#### This is a Header 4
-##### This is a Header 5
-###### This is a Header 6
-####### This is a Header 7 은 지원되지 않습니다.
+사용자 (로그인 · 소유권 인증 · 사용량 체크)
+        │  웹 URL / GitHub 레포 / PR
+        ▼
+ scanops-frontend (대시보드 · Vercel)
+        │
+        ▼
+ scanops-backend (Spring Boot · Railway)
+ - 인증/구독/사용량 게이트 (AiRouter)
+ - 스캔 오케스트레이션
+        │  HTTP POST /analyze(/batch)
+        ▼
+ 분석 코어 (AWS)
+ ├─ FastAPI (api_server.py · v4.0.0)
+ ├─ Ollama  (qwen2.5-coder-security-v4 · 986MB)
+ └─ Qdrant  (CVE 12,251건 벡터 검색)
+        │
+        ▼
+ OWASP ZAP (DAST 동적 스캔 · scanops-infra)
+        │
+        ▼
+ PostgreSQL (스캔·결과·사용량·구독 / 코드 원문 미저장)
 ```
 
-# This is a Header 1
-## This is a Header 2
-### This is a Header 3
-#### This is a Header 4
-##### This is a Header 5
-###### This is a Header 6
-####### This is a Header 7 은 지원되지 않습니다.
-<br />
+### 2.2. 사용 기술
+| 스택 | 기술 / 버전 | 배포 |
+|------|-------------|------|
+| Frontend | React 18, TypeScript 5, Vite 6, Tailwind CSS v4, React Router v6, Recharts, FSD 아키텍처 | Vercel |
+| Backend | Spring Boot 3.2.5, Java 17, Spring Data JPA, Spring Security(JWT/OAuth), WebClient | Railway |
+| AI 분석 API | FastAPI (Python), Ollama 서빙 | AWS |
+| AI Model | QLoRA v4 파인튜닝 (Qwen2.5-Coder-1.5B-Instruct), GGUF Q4_K_M(986MB) | HuggingFace Hub → AWS |
+| RAG | BAAI/bge-small-en-v1.5 임베딩(384차원) + Qdrant (CVE 12,251건) | AWS |
+| Security Engine | OWASP ZAP (`ghcr.io/zaproxy/zaproxy:stable`) | AWS / 로컬 |
+| Database | PostgreSQL 15 | Railway |
+| 결제 | 토스페이먼츠 / 스트라이프 (예정) | - |
+| Infra | Docker Compose (로컬: ZAP + DVWA + PostgreSQL), 하이브리드 배포(분석 코어 AWS / BE·FE Railway) | - |
 
-### 4.2. 인용문 BlockQuote
+**활용한 생성형 AI / AI 코딩 도구**
+- **Claude Code (Anthropic)** — 멀티 레포 아키텍처 정리, 백엔드·모델 코드 작성, 벤치마크·리팩토링, GitHub Actions 미러링 자동화에 활용.
+- **자체 파인튜닝 LLM (핵심)** — Qwen2.5-Coder-1.5B를 QLoRA로 보안 특화 파인튜닝(v4, scratch 재훈련, 학습 데이터 1,000개 / CWE 35종) + NVD CVE RAG.
+- **OpenAI GPT / Anthropic Claude / Google Gemini API** — 런타임 AI 분석 폴백 체인(`AiRouter`)의 구성 요소.
+
+---
+
+## 3. 개발결과
+
+### 3.1. 전체시스템 흐름도
 ```
-> This is a first blockqute.
->	> This is a second blockqute.
->	>	> This is a third blockqute.
+진입(회원 분기)
+  ├─ 미회원 → 회원가입(이메일/GitHub OAuth) → 이메일 인증 → 로그인
+  └─ 회원   → 로그인
+        │
+        ▼
+   랜딩 (차별점 · 가격 · 약관/개인정보)
+     ├─ 구독/결제
+     └─ MyPage (개인정보 · 스캔기록+삭제 · 사용량 미터 · 구독상태)
+            │
+            ▼
+   스캔  ① 로그인  ② 레포/도메인 소유권 인증  ③ 플랜별 사용량 한도 통과
+            │
+            ▼
+   분석  FastAPI → Ollama(Qwen v4) → 검증 실패 시 Qdrant RAG 폴백
+            │
+            ▼
+   결과  취약점 + CVE/CWE + CVSS + 신뢰도 → 대시보드 / PDF / AI 브리핑
+        (소스코드는 폐기, 결과만 저장 · 삭제 증빙 로그 기록)
 ```
-> This is a first blockqute.
->	> This is a second blockqute.
->	>	> This is a third blockqute.
-<br />
 
-### 4.3. 목록 List
-* **Ordered List**
-```
-1. first
-2. second
-3. third  
-```
-1. first
-2. second
-3. third
-<br />
+### 3.2. 기능설명
+- **인증/계정:** 이메일·GitHub OAuth 가입/로그인, 이메일 인증, 약관 동의 기록, JWT 세션, 비밀번호 재설정.
+- **MyPage:** 프로필·구독 등급, 이번 달 사용량 미터(DAST 횟수 / Actions·SAST LOC 잔여), 스캔 기록 조회·재조회(보관 1개월), 개별·전체 결과 삭제, 회원 탈퇴.
+- **소유권 인증:** DAST 대상 도메인(DNS TXT)·SAST/Actions 대상 레포(repo 파일) 소유권을 검증한 뒤에만 스캔, 검증된 타겟은 재사용.
+- **스캔 게이트:** 스캔 전 ① 로그인 ② 소유권 인증 ③ 플랜별 사용량 한도를 통과시킵니다.
+- **결과 출력:** 취약점별 CVSS·신뢰도·위치 상세 뷰, CVSS 7.0 이상 우선 필터링, 공유용 PDF, Claude/GPT에 붙여 수정코드를 받는 AI 보안 브리핑(Pro+).
+- **GitHub App PR 분석:** [GitHub App](https://github.com/apps/scanops-security-scanner) 설치 후 PR을 올리면 자동 분석, 취약점이 발견되면 해당 코드 라인에 한국어 코멘트가 달립니다.
 
-* **Unordered List**
-```
-* 하나
-  * 둘
+> 📹 시연 영상: `섹션 5` 참고
 
-+ 하나
-  + 둘
+### 3.3. 기능명세서
+> 기능명세서(Notion): https://lavish-carpet-8f6.notion.site/ScanOps-3730070cb76480ebacf6dc6ee917f99d?pvs=74
 
-- 하나
-  - 둘
-```
-* 하나
-  * 둘
-
-+ 하나
-  + 둘
-
-- 하나
-  - 둘
-<br />
-
-### 4.4. 코드 CodeBlock
-* 코드 블럭 이용 '``'
-```
-여러줄 주석 "```" 이용
-"```
-#include <stdio.h>
-int main(void){
-  printf("Hello world!");
-  return 0;
-}
-```"
-
-단어 주석 "`" 이용
-"`Hello world`"
-
-* 큰 따옴표(") 없이 사용하세요.
-``` 
-<br />
-
-### 4.5. 링크 Link
-```
-[Title](link)
-[부산대학교 AI융합교육원](https://swedu.pusan.ac.kr/swedu/index.do)
-
-<link>
-<https://swedu.pusan.ac.kr>
-``` 
-[부산대학교 AI융합교육원](https://swedu.pusan.ac.kr)
-
-<https://swedu.pusan.ac.kr>  
-<br />
-
-### 4.6. 강조 Highlighting
-```
-*single asterisks*
-_single underscores_
-**double asterisks**
-__double underscores__
-~~cancelline~~<img width="1994" height="253" alt="KakaoTalk_20260520_160616446_01" src="https://github.com/user-attachments/assets/9269b8bd-7539-4120-a97c-705f96fd5e71" />
+### 3.4. 디렉토리 구조
+본 제출 레포지토리는 4개 서비스 레포를 동일 이름의 서브폴더로 미러링한 모노 구조입니다. 각 레포는 `main` 브랜치 push 시 GitHub Actions로 자동 동기화됩니다.
 
 ```
-*single asterisks* <br />
-_single underscores_ <br />
-**double asterisks** <br />
-__double underscores__ <br />
-~~cancelline~~  <br />
-<br />
+pnuai-c-03-scanops/
+├── scanops-frontend/   React + TS + Vite + Tailwind, FSD 아키텍처 (대시보드 UI)
+├── scanops-backend/    Spring Boot 3.2.5 (인증·구독·게이트·스캔 오케스트레이션·AiRouter)
+├── scanops-model/      QLoRA v4 + RAG 보안 분석 LLM (FastAPI · Ollama · Qdrant)
+├── scanops-infra/      Docker Compose (ZAP + DVWA + PostgreSQL)
+└── README.md
+```
 
-### 4.7. 이미지 Image
+| 서비스 | 설명 |
+|--------|------|
+| `scanops-frontend` | 대시보드 UI |
+| `scanops-backend` | Spring Boot 백엔드 (인증·구독·게이트) |
+| `scanops-model` | AI 분석 서버 (QLoRA v4 + RAG, FastAPI) |
+| `scanops-infra` | ZAP + 인프라 구성 |
+
+### 3.5. AI 도구 활용 및 모델 성능
+**AI 도구 활용**
+- **설계:** Claude Code로 멀티 레포 아키텍처(레포 분리, 의존성 정리, 해커톤 미러링 워크플로, SaaS 전환 설계)를 정리했습니다.
+- **개발:** 백엔드 `AiRouter` 폴백 구조, 모델 RAG 파이프라인, 프론트엔드 FSD 구조 코드를 AI 페어 프로그래밍으로 작성했습니다.
+- **모델:** QLoRA v4 파인튜닝 데이터 생성·scratch 재훈련·GGUF 양자화·벤치마크 자동화 전 과정을 AI로 가속했습니다.
+
+**모델 (Qwen2.5-Coder-1.5B QLoRA v4)**
+- 베이스: Qwen2.5-Coder-1.5B-Instruct (양자화 후 986MB)
+- 파인튜닝: QLoRA r=32 / alpha=64, 어텐션+MLP 7개 레이어 타겟, 학습 가능 파라미터 36.9M(2.34%)
+- 학습 데이터 1,000개(CWE 35종, CWE Top-25 전수 포함), scratch 재훈련(Catastrophic Forgetting 해결), 최종 손실 0.2897
+- v4 신규: 응답에 **CVSS 점수** 포함
+
+**벤치마크 (40케이스)**
+
+| 방법 | 탐지율 | Stage1 비율 | 속도 | 비용 |
+|------|--------|-------------|------|------|
+| ScanOps v2 | 95% | 75% | 2.7s | 무료 |
+| ScanOps v4 (현재) | **100%** | **100%** | 5.3s | 무료 |
+| Grok-3 API (비교) | 95% | - | 17.7s | 유료 |
+| Grok-3 + RAG (비교) | 100% | - | 5.5s | 유료 |
+
+→ Stage1 100% = RAG 폴백 없이 파인튜닝 모델 단독으로 40케이스 전원 탐지.
+
+---
+
+## 4. 설치 및 사용 방법
+
+### 가장 쉬운 방법 — 웹 / GitHub App
+1. 웹에서 회원가입·로그인 후 대상 URL·레포를 등록하고 소유권 인증 → 스캔 실행, 또는
+2. [ScanOps GitHub App](https://github.com/apps/scanops-security-scanner) 설치 → 레포 선택 → PR 올리면 자동 분석.
+
+### 로컬 실행 (개발용)
+각 서비스 레포의 `README.md`에 상세 가이드가 있습니다.
+
+```bash
+# 1) 인프라 (ZAP + DVWA + PostgreSQL)
+cd scanops-infra && docker-compose up -d
+
+# 2) 모델/분석 서버 (FastAPI + Ollama + Qdrant)
+cd scanops-model && pip install -e .
+docker-compose up -d            # Qdrant
+scanops scan <파일/디렉토리>     # CLI 분석
+
+# 3) 백엔드 (Spring Boot)
+cd scanops-backend && ./gradlew bootRun
+
+# 4) 프론트엔드 (React)
+cd scanops-frontend && npm install && npm run dev
 ```
-<img src="/path/to/img.jpg" width="600px" title="Title" alt="Alt text"></img>
-![Alt text](/path/to/img.jpg "Optional title")
-```
-<img src="https://github.com/user-attachments/assets/3c717ecf-6e22-487b-ae12-72d11e8af5ff" width="600px" title="부산대학교 AI융합교육원" alt="부산대학교 AI융합교육원"></img>
-<br/>
-![부산대학교 AI융합교육원](https://github.com/user-attachments/assets/3c717ecf-6e22-487b-ae12-72d11e8af5ff "부산대학교 AI융합교육원")
-<br/>
+
+---
+
+## 5. 소개 및 시연 영상
+> 프로젝트 소개 영상을 교육원 메일(swedu@pusan.ac.kr)로 제출 후 부여받은 YouTube URL을 여기에 추가하세요. — _TODO_
+
+---
+
+## 6. 팀 소개
+> 창업트랙(C) 3조 · 팀 **ScanOps**
+
+| 이름 | 역할 | 연락처 |
+|------|------|--------|
+| 김세한 | 팀장 | 010-7722-3694 |
+| 전혜은 | 개발 | 010-9155-8528 |
+| 이경윤 | 개발 | 010-2012-9376 |
+| 최효석 | UX/마케팅 | 010-8974-3098 |
+
+---
+
+## 7. 해커톤 참여 후기
+> 팀원별 참여 후기를 작성하세요. — _TODO_
