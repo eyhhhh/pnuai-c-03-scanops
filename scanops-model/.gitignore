@@ -1,0 +1,55 @@
+__pycache__/
+*.pyc
+*.pth
+*.bin
+.env
+.DS_Store
+
+# 데이터/인덱스 (로컬 생성물)
+data/*.json
+data/*.jsonl
+data/*.faiss
+*.egg-info/
+
+# 가상환경
+.venv/
+
+# 벡터DB 로컬 스토리지
+qdrant_storage/
+qdrant_local/
+chroma_db/
+
+# 모델 파일 (대용량 바이너리)
+models/
+*.gguf
+*.safetensors
+*.pt
+*.bin
+
+# 리포트/결과물
+reports/*.json
+reports/*.log
+reports/*.docx
+reports/*.pdf
+reports/charts/
+
+# 노트북 체크포인트
+.ipynb_checkpoints/
+.cache/
+
+# 배포 산출물(대용량 — gguf 포함 zip)
+*.zip
+data/*.jsonl.*_bak
+
+# rebuild 외부 벤치마크 대용량 (빌더로 재생성 가능)
+rebuild/data/raw/
+rebuild/data/primevul_test.jsonl
+rebuild/data/cleanvul_test.jsonl
+rebuild/out/adapter/
+rebuild/out/*.id
+rebuild/out/*.log
+rebuild/data/train_v2.jsonl
+rebuild/data/val_v2.jsonl
+rebuild/data/cleanvul_v2_test.jsonl
+rebuild/data/cleanvul_heldout_raw.json
+llama.cpp/

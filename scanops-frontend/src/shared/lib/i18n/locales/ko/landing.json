@@ -1,0 +1,140 @@
+{
+  "nav": {
+    "verify": "검증",
+    "whyDifferent": "왜 다른가",
+    "codeSecurity": "코드 보안",
+    "pricing": "요금제",
+    "menuOpen": "메뉴 열기",
+    "menuClose": "메뉴 닫기"
+  },
+  "hero": {
+    "badge": "소스코드는 외부 API로 전송되지 않습니다",
+    "titleLine1": "당신의 코드는,",
+    "titleHighlight": "안전한가요?",
+    "subtitle1": "ChatGPT·Claude 같은 외부 서비스에 코드를 보내지 않고, 보안 전용 로컬 모델과 그래프 분석이 직접 취약점을 찾아드려요.",
+    "subtitle2": "URL이나 GitHub 레포만 넣으면 위험도와 고치는 방법까지, 한국어 리포트로 알려드려요.",
+    "ctaStart": "무료로 스캔 시작하기",
+    "ctaBenchmark": "실제 검증 보기",
+    "note": "가입하면 웹사이트 보안검사 1회 무료 · 카드 등록 없이 시작"
+  },
+  "stats": {
+    "noExternalCode": { "value": "0건", "label": "외부 API로 나가는 소스코드" },
+    "falsePositiveRate": { "value": "84.7%", "label": "오탐 필터 제거율 · 상용 API(83.9%) 앞섬" },
+    "hybrid": { "value": "하이브리드", "label": "그래프 데이터흐름 추적 + AI 룰 판단" },
+    "threeModes": { "value": "3가지", "label": "DAST·SAST·PR 자동분석 한 번에" }
+  },
+  "benchmark": {
+    "tag": "검증",
+    "title": "오탐 필터링, 상용 API를 앞섰습니다",
+    "sub": "코드를 외부로 보내지 않는 로컬 모델로 상용 API보다 더 정확하게 오탐을 걸러냈어요.",
+    "card1": {
+      "title": "오탐 필터링, 상용 API를 앞섰어요",
+      "desc": "코드를 외부로 보내는 상용 API와 달리, 로컬 모델만으로 더 높은 오탐 제거율을 냈어요.",
+      "scanopsLabel": "ScanOps(로컬) 오탐 제거율",
+      "commercialLabel": "상용 API(Claude) 오탐 제거율",
+      "footnote": "* jquery-ui 레포 기준 오탐 필터링 성능 비교(탐지력 지표 아님)."
+    },
+    "card2": {
+      "title": "완전한 로컬 처리",
+      "desc": "룰 생성부터 오탐 필터링, 탐지까지 전 단계를 자체 로컬 모델(Qwen3.5-9B)로 처리해요.",
+      "steps": {
+        "ruleGeneration": "룰 생성",
+        "falsePositiveFiltering": "오탐 필터링",
+        "vulnDetection": "취약점 탐지"
+      },
+      "localModelBadge": "로컬 모델",
+      "footer": "ChatGPT·Claude 같은 외부 API로 코드가 전송되는 구간이 아예 없습니다."
+    }
+  },
+  "why": {
+    "tag": "왜 다른가",
+    "title": "작지만, 보안에선 더 정확합니다",
+    "sub": "범용 대형 모델을 따라 크기를 키우는 대신, 보안 하나에 집중했습니다. 그게 더 잘 찾는 길이었어요.",
+    "cards": {
+      "localModel": {
+        "title": "보안만 학습한 로컬 모델",
+        "desc": "룰 생성·오탐 필터링·탐지까지 전부 자체 로컬 모델(Qwen3.5-9B)로 처리해요. 코드가 ChatGPT·Claude 같은 외부 API로 전송되는 일이 없습니다."
+      },
+      "wholeRepo": {
+        "title": "파일 하나가 아니라 레포 전체를",
+        "desc": "JS·TS 레포는 코드 속성 그래프(CPG)로 전체를 연결해 파일 간 데이터 흐름까지 추적해요. 한 파일씩만 보는 방식으로는 원리적으로 놓치는 취약점을 잡습니다."
+      },
+      "confidentFilter": {
+        "title": "오탐은 확신 있을 때만 제거",
+        "desc": "API 각각의 위험도는 손규칙 8종 + 레포별로 학습한 규칙이 판단하고, 실제 취약점 흐름 추적은 그래프 알고리즘이 맡아요. 오탐 필터는 확신 있게 안전한 코드만 제거합니다. 놓치는 것보다 잘못 알리는 게 낫다는 원칙이에요."
+      }
+    }
+  },
+  "security": {
+    "tag": "코드 보안",
+    "title": "소스코드는 서버로 오지 않습니다",
+    "sub": "가장 강력한 보안은 정책이 아니라 구조입니다. ScanOps는 코드가 외부로 나가지 않도록 설계됐습니다.",
+    "flow1": {
+      "badge": "Free · Pro",
+      "title": "URL 스캔 — 코드 전송 없음",
+      "steps": ["웹 URL 입력", "ScanOps가 외부에서 동적 스캔", "취약점 리포트만 생성"],
+      "note": "소스코드 자체가 서버로 전송되지 않습니다."
+    },
+    "flow2": {
+      "badge": "GitHub Actions",
+      "title": "레포 스캔 — 고객 인프라 내 분석",
+      "steps": ["PR 이벤트 발생", "고객 Actions 러너 안에서 직접 스캔", "결과(리포트)만 ScanOps로 전송"],
+      "note": "코드는 고객 인프라를 벗어나지 않습니다."
+    },
+    "features": {
+      "memoryOnly": { "title": "메모리에서만 처리", "desc": "DB에는 결과만 저장, 코드는 미저장" },
+      "immediateDeletion": { "title": "분석 후 즉시 폐기", "desc": "삭제 버튼·삭제 로그로 증명" },
+      "readOnly": { "title": "read-only 권한", "desc": "GitHub 최소 scope만 요청" },
+      "httpsEncryption": { "title": "HTTPS 전송 암호화", "desc": "모든 통신 기본 암호화" }
+    }
+  },
+  "scanModes": {
+    "tag": "3가지 스캔 방식",
+    "title": "웹부터 레포, PR까지 한 번에",
+    "sub": "검사 대상과 상황에 맞는 방식을 선택하세요. 사용량은 방식별로 투명하게 관리됩니다.",
+    "dast": { "title": "웹사이트 동적 분석", "desc": "실행 중인 앱을 외부에서 스캔. 코드 전송 없이 URL만으로 진단합니다." },
+    "sast": { "title": "레포 전체 정적 분석", "desc": "전 언어는 AI 모델이, JS·TS 레포는 파일 간 흐름을 추적하는 그래프 분석까지 함께 적용돼요." },
+    "actions": { "title": "PR 자동 분석", "desc": "고객 인프라 안에서 PR diff를 검사하고 결과만 전송. 코드가 밖으로 안 나갑니다." }
+  },
+  "pricing": {
+    "tag": "요금제",
+    "title": "필요한 만큼만, 합리적으로",
+    "sub": "회원가입하면 DAST 1회를 무료로 체험할 수 있어요. Pro는 7일 무료체험을 제공하며, 언제든 해지할 수 있습니다.",
+    "popular": "인기",
+    "perMonth": "/월",
+    "free": { "desc": "가입하고 가볍게 체험", "feats": ["DAST 웹 스캔 1회", "결과 1개월 보관"] },
+    "pro": { "desc": "1인 개발자·바이브코더에게 추천", "feats": ["DAST 월 5회", "SAST·액션 월 10만 줄", "PR 자동 분석", "AI 브리핑·PDF"] },
+    "max": { "desc": "코드량이 많은 개인에게 추천", "feats": ["DAST 월 30회", "SAST·액션 월 40만 줄", "우선 분석 큐"] },
+    "ctaFree": "무료로 시작",
+    "ctaStart": "{{name}} 시작하기",
+    "compareLink": "팀 플랜·전체 비교 보기"
+  },
+  "githubCta": {
+    "badge": "GitHub App",
+    "titleBefore": "PR 올리면 ",
+    "titleHighlight": "자동으로 분석",
+    "titleAfter": "됩니다",
+    "desc": "ScanOps GitHub App을 레포에 설치하면 PR마다 변경된 코드가 자동으로 검사돼요. 발견된 취약점은 해당 코드 줄에 바로 댓글로, 뭐가 문제인지·어떻게 고치면 되는지 한국어로 알려줍니다.",
+    "cta": "GitHub App 시작하기"
+  },
+  "finalCta": {
+    "title": "당신의 코드, 지금 무료로 점검하세요",
+    "subtitle": "회원가입하면 웹사이트 보안검사 1회를 무료로 체험할 수 있어요. 카드 등록도 필요 없어요.",
+    "ctaStart": "무료로 시작하기",
+    "ctaLogin": "로그인"
+  },
+  "footer": {
+    "copyright": "© 2026 ScanOps · 코드 비전송 자체 AI 보안 진단"
+  },
+  "reportPreview": {
+    "scanCompleted": "{{date}} 스캔 완료",
+    "summary": {
+      "vulnerabilities": "취약점",
+      "vulnerabilitiesValue": "7건",
+      "maxCvss": "최고 CVSS",
+      "criticalValue": "1건",
+      "highValue": "1건"
+    },
+    "privacyNote": "소스코드는 서버에 저장되지 않고, 결과만 남습니다"
+  }
+}

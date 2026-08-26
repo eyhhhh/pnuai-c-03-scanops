@@ -1,0 +1,140 @@
+{
+  "nav": {
+    "verify": "Benchmark",
+    "whyDifferent": "Why Us",
+    "codeSecurity": "Code Security",
+    "pricing": "Pricing",
+    "menuOpen": "Open menu",
+    "menuClose": "Close menu"
+  },
+  "hero": {
+    "badge": "Your source code is never sent to external APIs",
+    "titleLine1": "Is your code,",
+    "titleHighlight": "actually safe?",
+    "subtitle1": "We never send your code to external services like ChatGPT or Claude — a dedicated local security model and graph analysis engine find vulnerabilities directly, in-house.",
+    "subtitle2": "Just drop in a URL or GitHub repo, and we'll walk you through the risk level and how to fix it — all in one clear report.",
+    "ctaStart": "Start a free scan",
+    "ctaBenchmark": "See the benchmark results",
+    "note": "Sign up for 1 free website security scan · No card required"
+  },
+  "stats": {
+    "noExternalCode": { "value": "0", "label": "Source code sent to external APIs" },
+    "falsePositiveRate": { "value": "84.7%", "label": "False-positive filter removal rate · beats commercial APIs (83.9%)" },
+    "hybrid": { "value": "Hybrid", "label": "Graph data-flow tracing + AI rule-based judgment" },
+    "threeModes": { "value": "3", "label": "DAST · SAST · PR auto-analysis, all in one" }
+  },
+  "benchmark": {
+    "tag": "Benchmark",
+    "title": "Our false-positive filtering beats commercial APIs",
+    "sub": "Without ever sending your code off-site, our local model filters false positives more accurately than commercial APIs.",
+    "card1": {
+      "title": "False-positive filtering that beats commercial APIs",
+      "desc": "Unlike commercial APIs that send code off-site, our local-only model achieved a higher false-positive removal rate.",
+      "scanopsLabel": "ScanOps (local) false-positive removal rate",
+      "commercialLabel": "Commercial API (Claude) false-positive removal rate",
+      "footnote": "* False-positive filtering comparison based on the jquery-ui repo (not a detection-rate metric)."
+    },
+    "card2": {
+      "title": "Fully local processing",
+      "desc": "From rule generation to false-positive filtering to detection, every step runs on our own local model (Qwen3.5-9B).",
+      "steps": {
+        "ruleGeneration": "Rule generation",
+        "falsePositiveFiltering": "False-positive filtering",
+        "vulnDetection": "Vulnerability detection"
+      },
+      "localModelBadge": "Local model",
+      "footer": "There's no step where your code is ever sent to an external API like ChatGPT or Claude."
+    }
+  },
+  "why": {
+    "tag": "Why Us",
+    "title": "Smaller, but more accurate at security",
+    "sub": "Instead of scaling up like general-purpose large models, we focused on security alone — and it found more.",
+    "cards": {
+      "localModel": {
+        "title": "A local model trained only on security",
+        "desc": "Rule generation, false-positive filtering, and detection all run on our own local model (Qwen3.5-9B). Your code is never sent to external APIs like ChatGPT or Claude."
+      },
+      "wholeRepo": {
+        "title": "The whole repo, not just one file",
+        "desc": "For JS/TS repos, we connect the entire codebase with a Code Property Graph (CPG) to trace data flow across files. This catches vulnerabilities that file-by-file analysis is structurally bound to miss."
+      },
+      "confidentFilter": {
+        "title": "We only remove false positives when we're certain",
+        "desc": "Each API's risk level is judged by 8 hand-built rules plus rules learned per repository, while a graph algorithm traces the actual vulnerability flow. Our false-positive filter only removes code it's confident is safe — a false alarm beats a missed vulnerability."
+      }
+    }
+  },
+  "security": {
+    "tag": "Code Security",
+    "title": "Your source code never reaches our servers",
+    "sub": "The strongest security isn't a policy — it's architecture. ScanOps is built so your code never leaves your environment.",
+    "flow1": {
+      "badge": "Free · Pro",
+      "title": "URL scan — no code transfer",
+      "steps": ["Enter a web URL", "ScanOps runs a dynamic scan from the outside", "Only a vulnerability report is generated"],
+      "note": "Your source code itself is never sent to our servers."
+    },
+    "flow2": {
+      "badge": "GitHub Actions",
+      "title": "Repo scan — analyzed inside your own infrastructure",
+      "steps": ["A PR event triggers the scan", "Runs directly inside your own Actions runner", "Only the results (report) are sent to ScanOps"],
+      "note": "Your code never leaves your infrastructure."
+    },
+    "features": {
+      "memoryOnly": { "title": "Processed in memory only", "desc": "Only results are stored in the DB — never your code" },
+      "immediateDeletion": { "title": "Discarded immediately after analysis", "desc": "Verified with a delete button and deletion logs" },
+      "readOnly": { "title": "Read-only access", "desc": "Requests only the minimum required GitHub scope" },
+      "httpsEncryption": { "title": "HTTPS transport encryption", "desc": "All communication is encrypted by default" }
+    }
+  },
+  "scanModes": {
+    "tag": "3 Scan Modes",
+    "title": "From web to repo to PR, all in one",
+    "sub": "Choose the mode that fits what you're scanning. Usage is tracked transparently for each mode.",
+    "dast": { "title": "Website dynamic analysis", "desc": "Scans your running app from the outside. Diagnoses with just a URL — no code transfer required." },
+    "sast": { "title": "Full-repo static analysis", "desc": "An AI model covers every language, and for JS/TS repos we also apply graph analysis that traces data flow across files." },
+    "actions": { "title": "Automatic PR analysis", "desc": "Inspects the PR diff inside your own infrastructure and sends only the results. Your code never leaves." }
+  },
+  "pricing": {
+    "tag": "Pricing",
+    "title": "Pay for only what you need",
+    "sub": "Sign up and try one DAST scan for free. Pro comes with a 7-day free trial, and you can cancel anytime.",
+    "popular": "Popular",
+    "perMonth": "/mo",
+    "free": { "desc": "Sign up and try it out", "feats": ["1 DAST web scan", "Results kept for 1 month"] },
+    "pro": { "desc": "Recommended for solo developers and vibe coders", "feats": ["DAST: 5 scans/month", "SAST + Actions: 100K lines/month", "Automatic PR analysis", "AI briefing & PDF reports"] },
+    "max": { "desc": "Recommended for individuals with large codebases", "feats": ["DAST: 30 scans/month", "SAST + Actions: 400K lines/month", "Priority analysis queue"] },
+    "ctaFree": "Start for free",
+    "ctaStart": "Start {{name}}",
+    "compareLink": "See team plans & full comparison"
+  },
+  "githubCta": {
+    "badge": "GitHub App",
+    "titleBefore": "Open a PR, get ",
+    "titleHighlight": "automatic analysis",
+    "titleAfter": ".",
+    "desc": "Install the ScanOps GitHub App on your repo, and every PR's changed code gets checked automatically. Any vulnerabilities found are posted as comments right on the relevant line, explaining what's wrong and how to fix it.",
+    "cta": "Get the GitHub App"
+  },
+  "finalCta": {
+    "title": "Check your code for free, right now",
+    "subtitle": "Sign up and try one free website security scan. No card required.",
+    "ctaStart": "Get started for free",
+    "ctaLogin": "Log in"
+  },
+  "footer": {
+    "copyright": "© 2026 ScanOps · In-house AI security scanning that never sends your code out"
+  },
+  "reportPreview": {
+    "scanCompleted": "Scan completed {{date}}",
+    "summary": {
+      "vulnerabilities": "Vulnerabilities",
+      "vulnerabilitiesValue": "7",
+      "maxCvss": "Highest CVSS",
+      "criticalValue": "1",
+      "highValue": "1"
+    },
+    "privacyNote": "Your source code is never stored on our servers — only the results are"
+  }
+}
